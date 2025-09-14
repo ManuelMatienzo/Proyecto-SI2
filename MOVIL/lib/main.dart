@@ -5,6 +5,9 @@ import 'package:textiltech/pages/personal_g.dart';
 import 'package:textiltech/pages/asistenciasturnos.dart';
 import 'package:textiltech/pages/Usuarios.dart';
 import 'package:textiltech/pages/configuracion.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'constants.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +48,7 @@ class MyApp extends StatelessWidget {
         '/configuracion': (_) => const ConfiguracionPage(),
       },
       home: const Login(),
+      //home: MyHomePage(title: 'Prueba Backend'),
     );
   }
 }
@@ -68,6 +72,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // Nuevo agregado Manu
+  @override
+  void initState() {
+    super.initState();
+    fetchUsuarios();
+  }
+
+  Future<void> fetchUsuarios() async {
+    print("Intentando conectar con el backend...");
+    final response = await http.get(Uri.parse('$baseUrl/api/usuario/'));
+    if (response.statusCode == 200) {
+      print(jsonDecode(response.body));
+    } else {
+      print('Error: ${response.statusCode}');
+    }
+  }
+
   int _counter = 0;
 
   void _incrementCounter() {
